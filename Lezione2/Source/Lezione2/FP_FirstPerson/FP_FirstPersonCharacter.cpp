@@ -12,6 +12,13 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
+void AFP_FirstPersonCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	CurrentAmmo=MaxAmmo;
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 // AFP_FirstPersonCharacter
 
@@ -66,6 +73,7 @@ void AFP_FirstPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	// Set up gameplay key bindings
 
 	// Bind jump events
+	PlayerInputComponent->BindAction("Reload",IE_Pressed,this, &AFP_FirstPersonCharacter::Reload);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	
@@ -90,52 +98,56 @@ void AFP_FirstPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void AFP_FirstPersonCharacter::OnFire()
 {
-	// Play a sound if there is one
-	if (FireSound != nullptr)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	}
+	//GEngine->AddOnScreenDebugMessage(-1,6.f, FColor::Red,"ammo:"+CurrentAmmo);
+	if(CurrentAmmo>0){
+		CurrentAmmo--;
 
-	// Try and play a firing animation if specified
-	if (FireAnimation != nullptr)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != nullptr)
+		// Play a sound if there is one
+		if (FireSound != nullptr)
 		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 		}
-	}
 
-	// Now send a trace from the end of our gun to see if we should hit anything
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		// Try and play a firing animation if specified
+		if (FireAnimation != nullptr)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+			if (AnimInstance != nullptr)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 1.f);
+			}
+		}
+
+		// Now send a trace from the end of our gun to see if we should hit anything
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	
-	FVector ShootDir = FVector::ZeroVector;
-	FVector StartTrace = FVector::ZeroVector;
+		FVector ShootDir = FVector::ZeroVector;
+		FVector StartTrace = FVector::ZeroVector;
 
-	if (PlayerController)
-	{
-		// Calculate the direction of fire and the start location for trace
-		FRotator CamRot;
-		PlayerController->GetPlayerViewPoint(StartTrace, CamRot);
-		ShootDir = CamRot.Vector();
+		if (PlayerController)
+		{
+			// Calculate the direction of fire and the start location for trace
+			FRotator CamRot;
+			PlayerController->GetPlayerViewPoint(StartTrace, CamRot);
+			ShootDir = CamRot.Vector();
 
-		// Adjust trace so there is nothing blocking the ray between the camera and the pawn, and calculate distance from adjusted start
-		StartTrace = StartTrace + ShootDir * ((GetActorLocation() - StartTrace) | ShootDir);
+			// Adjust trace so there is nothing blocking the ray between the camera and the pawn, and calculate distance from adjusted start
+			StartTrace = StartTrace + ShootDir * ((GetActorLocation() - StartTrace) | ShootDir);
+		}
+
+		// Calculate endpoint of trace
+		const FVector EndTrace = StartTrace + ShootDir * WeaponRange;
+
+		// Check for impact
+		const FHitResult Impact = WeaponTrace(StartTrace, EndTrace);
+
+		// Deal with impact
+		AActor* DamagedActor = Impact.GetActor();
+		PlayerHasShoot(DamagedActor,Impact.bBlockingHit);
+		//OnHitActor.Broadcast(DamagedActor,Impact.bBlockingHit);
 	}
-
-	// Calculate endpoint of trace
-	const FVector EndTrace = StartTrace + ShootDir * WeaponRange;
-
-	// Check for impact
-	const FHitResult Impact = WeaponTrace(StartTrace, EndTrace);
-
-	// Deal with impact
-	AActor* DamagedActor = Impact.GetActor();
-	PlayerHasShoot(DamagedActor,Impact.bBlockingHit);
-	//OnHitActor.Broadcast(DamagedActor,Impact.bBlockingHit);
 }
-
 
 void AFP_FirstPersonCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
@@ -249,6 +261,12 @@ FHitResult AFP_FirstPersonCharacter::WeaponTrace(const FVector& StartTrace, cons
 
 	return Hit;
 }
+
+void AFP_FirstPersonCharacter::Reload()
+{
+	CurrentAmmo=MaxAmmo;
+}
+
 
 void AFP_FirstPersonCharacter::TryEnableTouchscreenMovement(UInputComponent* PlayerInputComponent)
 {

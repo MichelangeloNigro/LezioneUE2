@@ -13,6 +13,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeLezione2_init() {}
 	LEZIONE2_API UFunction* Z_Construct_UDelegateFunction_Lezione2_HealthEvent__DelegateSignature();
 	LEZIONE2_API UFunction* Z_Construct_UDelegateFunction_Lezione2_PLayerEventTwo__DelegateSignature();
+	LEZIONE2_API UFunction* Z_Construct_UDelegateFunction_Lezione2_ReloadEvent__DelegateSignature();
 	UPackage* Z_Construct_UPackage__Script_Lezione2()
 	{
 		static UPackage* ReturnPackage = nullptr;
@@ -21,14 +22,15 @@ void EmptyLinkFunctionForGeneratedCodeLezione2_init() {}
 			static UObject* (*const SingletonFuncArray[])() = {
 				(UObject* (*)())Z_Construct_UDelegateFunction_Lezione2_HealthEvent__DelegateSignature,
 				(UObject* (*)())Z_Construct_UDelegateFunction_Lezione2_PLayerEventTwo__DelegateSignature,
+				(UObject* (*)())Z_Construct_UDelegateFunction_Lezione2_ReloadEvent__DelegateSignature,
 			};
 			static const UE4CodeGen_Private::FPackageParams PackageParams = {
 				"/Script/Lezione2",
 				SingletonFuncArray,
 				UE_ARRAY_COUNT(SingletonFuncArray),
 				PKG_CompiledIn | 0x00000000,
-				0x9A330F9A,
-				0x3CB935D3,
+				0x6097E5D9,
+				0xFBD083EA,
 				METADATA_PARAMS(nullptr, 0)
 			};
 			UE4CodeGen_Private::ConstructUPackage(ReturnPackage, PackageParams);

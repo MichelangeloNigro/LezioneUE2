@@ -12,6 +12,7 @@ class USkeletalMeshComponent;
 class USoundBase;
 class UAnimMontage;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FPLayerEventTwo, AActor*, HitActor, bool, bHit);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FReloadEvent);
 
 UCLASS(config=Game)
 class AFP_FirstPersonCharacter : public ACharacter
@@ -35,9 +36,16 @@ public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= Gameplay)
+	int MaxAmmo;
+	int CurrentAmmo;
 	
 	UPROPERTY(BlueprintAssignable)
 	FPLayerEventTwo OnHitActor;
+
+	// UPROPERTY(BlueprintAssignable)
+	// FReloadEvent reload;
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayerHasShoot(AActor* actor, bool hasHitSomething);
@@ -80,6 +88,9 @@ protected:
 	/** Handles strafing movement, left and right */
 	void MoveRight(float Val);
 
+	virtual void BeginPlay() override;
+
+	void Reload();
 	/**
 	 * Called via input to turn at a given rate.
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
