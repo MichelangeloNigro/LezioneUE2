@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FP_FirstPerson/HealthComponent.h"
 #include "GameFramework/Character.h"
 #include "FP_FirstPersonCharacter.generated.h"
 
@@ -37,6 +38,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
 
+	UFUNCTION()
+	void StampString();
+	
+	UPROPERTY(EditAnywhere, Category= Gameplay)
+	UHealthComponent* LifeManager;
+	
+
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= Gameplay)
 	int MaxAmmo;
 	int CurrentAmmo;

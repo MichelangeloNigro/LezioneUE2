@@ -13,6 +13,8 @@ C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\In
 C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\HUD.generated.h
 C:\Users\miche\Documents\scuola\fork\LezioneUE2\Lezione2\Intermediate\Build\Win64\UE4Editor\Inc\Lezione2\FP_FirstPersonHUD.generated.h
 C:\Users\miche\Documents\scuola\fork\LezioneUE2\Lezione2\Source\Lezione2\FP_FirstPerson\FP_FirstPersonCharacter.h
+C:\Users\miche\Documents\scuola\fork\LezioneUE2\Lezione2\Source\Lezione2\Public\FP_FirstPerson/HealthComponent.h
+C:\Users\miche\Documents\scuola\fork\LezioneUE2\Lezione2\Intermediate\Build\Win64\UE4Editor\Inc\Lezione2\HealthComponent.generated.h
 C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\GameFramework/Character.h
 C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\GameFramework/CharacterMovementReplication.h
 C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\CharacterMovementReplication.generated.h

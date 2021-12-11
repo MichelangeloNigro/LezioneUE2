@@ -24,7 +24,6 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::AssignDamage(float amount)
 {
 	currentLife = FMath::Clamp(currentLife-amount,0.f,maxLife);
-	
 	OnTakeDamage.Broadcast();
 	if (currentLife<=0.f)
 	{

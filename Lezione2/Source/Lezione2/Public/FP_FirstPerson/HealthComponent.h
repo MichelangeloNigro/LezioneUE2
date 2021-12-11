@@ -17,6 +17,7 @@ public:
 	UHealthComponent();
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category= Gameplay)
 	float maxLife;
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category= Gameplay)
 	float currentLife;
 
 	UPROPERTY(BlueprintAssignable)

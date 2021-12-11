@@ -1,10 +1,14 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "FP_FirstPersonCharacter.h"
+
+#include <string>
+
 #include "Animation/AnimInstance.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "Camera/CameraComponent.h"
+#include "FP_FirstPerson/HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
 
@@ -15,10 +19,20 @@ DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 void AFP_FirstPersonCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	LifeManager = Cast<UHealthComponent>(GetComponentByClass(UHealthComponent::StaticClass())) ;
+	check(LifeManager);
+	if (IsValid(LifeManager))
+	{
+		LifeManager->OnTakeDamage.AddDynamic(this, &AFP_FirstPersonCharacter::StampString);
+	}
 	CurrentAmmo=MaxAmmo;
 }
+void AFP_FirstPersonCharacter::StampString()
+{
+	//not raised??
+	GEngine->AddOnScreenDebugMessage(-1,6.f, FColor::Red,"Che Male, vita rimanente "+FString::FromInt(LifeManager->currentLife));
 
-
+}
 //////////////////////////////////////////////////////////////////////////
 // AFP_FirstPersonCharacter
 
@@ -98,7 +112,7 @@ void AFP_FirstPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void AFP_FirstPersonCharacter::OnFire()
 {
-	//GEngine->AddOnScreenDebugMessage(-1,6.f, FColor::Red,"ammo:"+CurrentAmmo);
+	GEngine->AddOnScreenDebugMessage(-1,6.f, FColor::Red,FString::FromInt(CurrentAmmo));
 	if(CurrentAmmo>0){
 		CurrentAmmo--;
 
@@ -129,6 +143,7 @@ void AFP_FirstPersonCharacter::OnFire()
 		{
 			// Calculate the direction of fire and the start location for trace
 			FRotator CamRot;
+			//Setta i valori start e camrot
 			PlayerController->GetPlayerViewPoint(StartTrace, CamRot);
 			ShootDir = CamRot.Vector();
 
@@ -266,6 +281,8 @@ void AFP_FirstPersonCharacter::Reload()
 {
 	CurrentAmmo=MaxAmmo;
 }
+
+
 
 
 void AFP_FirstPersonCharacter::TryEnableTouchscreenMovement(UInputComponent* PlayerInputComponent)
